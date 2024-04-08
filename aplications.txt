@@ -1,0 +1,161 @@
+#---------------------------------------------------------------------------------#
+
+CONTEUDO PRINCIPAL:
+
+
+    + FastApi: 
+        -> self 
+        -> debug 
+        -> routes 
+        -> title 
+        -> summary 
+        -> description 
+        -> version 
+        -> openapi_url 
+        -> openapi_tags 
+        -> servers
+        -> dependecies
+        -> default_response_class
+        -> redirect_slashes
+        -> docs_url
+        -> redoc_url
+        -> swagger_ui_oauth2_redirect_url
+        -> swagger_ui_init_oauth
+        -> middleware
+        -> exception_handler
+        -> on_startup 
+        -> on_shutdown 
+        -> lifespan
+        -> terms_of_service 
+        -> contact
+        -> license_info
+        -> root_path
+        -> root_path_in_servers
+        -> responses
+        -> callbacks
+        -> webhooks
+        -> generate_unique_id_function
+        -> separate_input_output_schemas
+
+
+    + A classe principal do fastapi é a 'FastApi', os seus parâmetros principais são:
+        -> self: Este parâmetro é do tipo 'AppType', que é definido com uma TypeVar
+           com o atributo bound definido como FastApi. Isto significa que os métodos 
+           só são aplicáveis aos objetos de FastApi ou de suas subclasses.
+        -> debug: Um boolean que indica se a aplicação deve ou não retornar os logs
+           de erro da aplicação. 
+        -> routes: É um parâmetro que guarda todas as rotas da aplicação, seja http
+           ou websockets. As rotas são guardadas como uma lista de rotas 'List[BaseRoutes]',
+           e são declaradas por padrão como None.
+        -> title: É um parâmetro que define o título da função para o openapi, endpoint
+           '/docs'. Vem como 'FastApi' por padrão.
+        -> summary: Permite adicionar um resumo sobre a api. É opicional, por padrão é None.
+        -> description: Permite montar uma descrição simples do funcionamento da api utilizando
+           markdown para estruturar o texto. 
+        -> version: É aqui que nós declaramos a versão da api, em forma de string. Por padrão
+           ela vem declarada como '0.1.0'
+        -> openapi_url: É o parâmetro que define qual a url será destinada a openapi, por padrão
+           a url é '/openapi.json'.
+        -> openapi_tags: Aqui você pode ordenar as tags que você declarou para cada um dos end-
+           points da api. Além disso é possível dar descrição e nomea-las aqui. Caso as tags não
+           sejam ordenadas elas serão apresentadas de forma aleatória. Por padrão ela é None.
+        -> servers: Usado para declarar cada um dos hosts que servem a aplicação, desta forma é
+           possível utilizar um mesmo swagger para todas.
+        -> dependecies: Serve para declarar dependencias globais que serão utilizadas por todos
+           os endpoints.
+        -> default_response_class: Define uma classe padrão de resposta para todos os endpoints,
+           por padrão ela vem configurada como 'JSONResponse'.
+        -> redirect_slashes: Aqui indicamos se a aplicação deve ou não levar em consideção a barra 
+           final na hora de receber uma requisição, ou seja, suponhamos que eu tenha um endpoint 
+           '/test/pessoas/', caso meu parâmetro seja 'True' esta requisição receberá um código 307 
+           e será redirecionada para o endpoint correto.
+        -> docs_url: Determina a url padão da documentação swagger da api, vem como '/docs' por padrão.
+        -> redoc_url: É a url que é utilizada para gerar uma documentação redocs, vem como '/redoc' por 
+           padrão.
+        -> middleware: Umas lista de middlewares para serem adicionados ao criar o app, porém é preferível
+           utilizar 'app.add_middleware()' ao invés de adiciona-los nesta lista. 
+        -> exception_handler: ...
+        -> on_startup: É responsável por executar eventos sempre que a aplicação iniciar, é preferível
+           utilizar lifespan.
+        -> on_shutdown: Roda alguns eventos sempre que a aplicação é encerrada, preferível utilizar 
+           lifespan.
+        -> lifespan: Substitui tanto 'on_startup' quanto 'on_shutdown' com apenas um gerenciador de 
+           contexto.
+        -> terms_of_service: Permite com que você configure uma url para os termos de serviço da sua 
+           aplicação.
+        -> contact: Serve para guardar informações sobre o responsável pela api. 
+        -> license_info: Guarda informações sobre a licença da api.
+        -> root_path: É onde configuramos as informações de path da aplicação que serão entregues ao  
+           proxy.
+        -> root_path_in_servers: Desabilita a possíbilidade de auto criar urls no parâmetro servers.
+        -> responses: ...
+        -> callbacks: É onde podemos definir funções que serão executadas sempre que um endpoint for 
+           chamado.
+        -> webhooks: Permite adicionar webhooks a aplicação.
+        -> generate_unique_id_function: ...
+        -> separate_input_output_schemas: Define que os schemas de input e output da aplicação devem
+           ser diferentes.
+
+        # Funções:
+            -> openapi: Serve somente para retornar o schema de openapi
+            -> setup ... (Uma das funções centrais de fastapi para doc).
+            -> __call__ ...
+            
+
+    + Existe um parâmetro dentro de FastApi chamado router, este parâmetro é um objeto da classe ApiRouter,
+      aparentemente é a partir delas que todas as rotas serão configuradas. Existe um método chamado
+      'add_api_route', que é utilizado para adicionar um nova rota no parâmetro router, ela é utilizada 
+      dentro de uma função com o mesmo nome na classe FastApi.
+
+    + Da mesma forma que existe funções para adicionar endpoints convencionais também existem para adicionar
+      websockets. A função 'add_api_websocket_route', adiciona um websocket em router, esta função é utilizada 
+      por outra função chamada 'websocket', que nós utilizamos por padrão para adicionar um websocket na aplica-
+      ção.
+
+
+
+#---------------------------------------------------------------------------------#
+
+COISAS NOVAS QUE APRENDI:
+
+    -> Utilizar typevar permite concatenar dois tipos em um só, desta forma os parâmetros
+       podem aparecer como mais de um tipo. O uso do Union também é válido nesta situação,
+       porém menos elegante.
+    -> Código 307 serve para redirecionar uma requisição para outro endpoint.
+
+#---------------------------------------------------------------------------------#
+
+# DUVIDAS: 
+    
+    # FastApi:
+        -> Porque do uso do parâmetro servers. Ler a doc sobre 'Behind the proxy'.
+        -> Dependências globais em fastapi, buscar em 'global-dependecies' nas docs.
+        -> O redirecionamento para outros endpoints é feito de forma automática para 
+           dentro do fastapi ?
+        -> Como utilizar swagger e oauth2 e por que ?
+        -> Ler a doc sobre erros 'handling errors'.
+        -> Ler sobre metadata da api nas documentações.
+        -> Ler sobre 'Adicional responses'.
+        -> Ler sobre 'callbacks'.
+        -> Ler sobre como configurar swagger no fastapi.
+        -> Gerar clientes para a api, como isso funciona ?
+        -> Ler sobre testes de dependências com override.
+
+    # Código FastApi:
+        -> O que seria openapi ?
+        -> O que seria starlette ?
+        -> Para que serve a função 'api_route' dentro de FastApi ???
+        -> O que faz o parâmetro 'router' ???
+
+    # Python:
+        -> O que seriam as funções que iniciam com '@' ?
+        -> Funções dentro de outras funções.
+        -> Por que na função 'websocket' nós chamamos uma função interna chamada 
+           'decorator' para adicionar uwebsocket ao invés de fazer direto ? Seria 
+           isto um pattern ?
+
+
+#---------------------------------------------------------------------------------#
+
+# STOP: 
+    ° 07/04/2024 -> 1257
